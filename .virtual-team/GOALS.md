@@ -55,10 +55,10 @@ MVP 驗收標準：
 
 ### Feature 2.2：視覺回饋優化
 
-- [ ] `[IN PROGRESS]` Task 2.2.1：實作點擊位置浮動文字 (Floating Text)
+- [x] `[DONE]` Task 2.2.1：實作點擊位置浮動文字 (Floating Text)
   - 目標：使用者點擊收集按鈕時，在滑鼠位置顯示「+1」的動畫回饋。
   - 產出：`src/components/Effects/ClickEffect.tsx`。
-- [ ] `[TODO]` Task 2.2.2：實作資源條成長動畫
+- [ ] `[IN PROGRESS]` Task 2.2.2：實作資源條成長動畫
   - 目標：當資源增加時，數值以滾動動畫呈現而非瞬間跳變。
   - 產出：`src/components/Dashboard/ResourceDisplay.tsx`。
 
