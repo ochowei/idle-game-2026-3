@@ -49,13 +49,13 @@ MVP 驗收標準：
 - [x] `[DONE]` Task 2.1.1：實作「里程碑」監聽器
   - 目標：當玩家達到特定成就（如：擁有 10 座採礦場）時觸發通知。
   - 產出：`src/data/milestones.ts` 與對應的檢測邏輯。
-- [ ] `[IN PROGRESS]` Task 2.1.2：動態解鎖 UI 元件
+- [x] `[DONE]` Task 2.1.2：動態解鎖 UI 元件
   - 目標：初始隱藏高級建築，直到達成特定條件才在商店顯示。
   - 產出：`src/components/Store/StorePanel.tsx` 的過濾邏輯。
 
 ### Feature 2.2：視覺回饋優化
 
-- [ ] `[TODO]` Task 2.2.1：實作點擊位置浮動文字 (Floating Text)
+- [ ] `[IN PROGRESS]` Task 2.2.1：實作點擊位置浮動文字 (Floating Text)
   - 目標：使用者點擊收集按鈕時，在滑鼠位置顯示「+1」的動畫回饋。
   - 產出：`src/components/Effects/ClickEffect.tsx`。
 - [ ] `[TODO]` Task 2.2.2：實作資源條成長動畫
