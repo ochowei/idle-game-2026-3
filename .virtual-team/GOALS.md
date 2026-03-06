@@ -33,10 +33,10 @@ MVP 驗收標準：
 
 ### Feature 1.2：經濟循環系統
 
-- [ ] `[IN PROGRESS]` Task 1.2.1：實作自動資源產出邏輯 (Tick System)
+- [x] `[DONE]` Task 1.2.1：實作自動資源產出邏輯 (Tick System)
   - 目標：建立每秒執行一次的循環，計算所有建築產生的資源總和。
   - 產出：`src/hooks/useGameLoop.ts`。
-- [ ] `[TODO]` Task 1.2.2：實作建築購買與價格遞增公式
+- [ ] `[IN PROGRESS]` Task 1.2.2：實作建築購買與價格遞增公式
   - 目標：確保購買建築後價格按指數增長，並判斷餘額是否充足。
   - 產出：`src/components/Store/BuildingItem.tsx`。
 
