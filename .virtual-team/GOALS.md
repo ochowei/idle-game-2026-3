@@ -68,10 +68,10 @@ MVP 驗收標準：
 
 ### Feature 3.1：LocalStorage 整合
 
-- [ ] `[IN PROGRESS]` Task 3.1.1：實作存檔與自動讀取機制
+- [x] `[DONE]` Task 3.1.1：實作存檔與自動讀取機制
   - 目標：利用 Zustand Middleware 或原生 LocalStorage 儲存 JSON 狀態。
   - 產出：`src/utils/persistence.ts`。
-- [ ] `[TODO]` Task 3.1.2：實作「重設進度」功能
+- [ ] `[IN PROGRESS]` Task 3.1.2：實作「重設進度」功能
   - 目標：提供清除緩存按鈕供測試使用。
   - 產出：`src/components/Header/SaveControls.tsx`。
 
