@@ -3,6 +3,7 @@ import { formatNumber, formatRate } from './utils/formatters';
 import { useGameLoop } from './hooks/useGameLoop';
 import { StorePanel } from './components/Store/StorePanel';
 import { MilestoneNotification } from './components/Milestone/MilestoneNotification';
+import { useClickEffect, ClickEffectLayer } from './components/Effects/ClickEffect';
 
 export default function App() {
   useGameLoop();
@@ -12,9 +13,12 @@ export default function App() {
     mineralsPerSec,
     energyPerSec,
     isPowerOutage,
+    upgrades,
     manualMine,
     manualEnergy,
   } = useGameStore();
+
+  const { spawn, floaters } = useClickEffect();
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-8 font-mono">
@@ -45,13 +49,19 @@ export default function App() {
 
       <section className="flex gap-4">
         <button
-          onClick={manualMine}
+          onClick={(e) => {
+            manualMine();
+            spawn(e, upgrades.drill ? '+2' : '+1', 'text-yellow-300');
+          }}
           className="px-4 py-2 border border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-gray-900"
         >
           ⛏️ 開採隕石
         </button>
         <button
-          onClick={manualEnergy}
+          onClick={(e) => {
+            manualEnergy();
+            spawn(e, '+1⚡', 'text-cyan-300');
+          }}
           className="px-4 py-2 border border-yellow-400 text-yellow-400 hover:bg-yellow-400 hover:text-gray-900"
         >
           ⚡ 手搖發電機
@@ -61,6 +71,8 @@ export default function App() {
       <StorePanel />
 
       <MilestoneNotification />
+
+      <ClickEffectLayer floaters={floaters} />
     </div>
   );
 }
