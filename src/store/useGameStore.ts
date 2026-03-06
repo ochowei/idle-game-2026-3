@@ -33,6 +33,8 @@ export interface BuildingConfig {
   prodMinerals: number; // 每秒礦物產量
   prodEnergy: number;   // 每秒能源產量
   consEnergy: number;   // 每秒能源消耗
+  unlockCondition?: (buildings: Buildings) => boolean;
+  unlockHint?: string;  // 給玩家看的解鎖提示文字
 }
 
 export interface UpgradeConfig {
@@ -74,6 +76,8 @@ export const BUILDING_CONFIGS: Record<BuildingId, BuildingConfig> = {
     prodMinerals: 15,
     prodEnergy: 0,
     consEnergy: 10,
+    unlockCondition: (buildings) => buildings.drone >= 5,
+    unlockHint: '需要 5 台採礦無人機',
   },
   reactor: {
     id: 'reactor',
@@ -84,6 +88,8 @@ export const BUILDING_CONFIGS: Record<BuildingId, BuildingConfig> = {
     prodMinerals: 0,
     prodEnergy: 50,
     consEnergy: 0,
+    unlockCondition: (buildings) => buildings.asteroid >= 1,
+    unlockHint: '需要 1 座小行星礦場',
   },
 };
 
