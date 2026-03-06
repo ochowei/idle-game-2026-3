@@ -1,6 +1,7 @@
 import { useGameStore } from './store/useGameStore';
 import { formatNumber, formatRate } from './utils/formatters';
 import { useGameLoop } from './hooks/useGameLoop';
+import { StorePanel } from './components/Store/StorePanel';
 
 export default function App() {
   useGameLoop();
@@ -55,6 +56,8 @@ export default function App() {
           ⚡ 手搖發電機
         </button>
       </section>
+
+      <StorePanel />
     </div>
   );
 }
