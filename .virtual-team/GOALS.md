@@ -36,7 +36,7 @@ MVP 驗收標準：
 - [x] `[DONE]` Task 1.2.1：實作自動資源產出邏輯 (Tick System)
   - 目標：建立每秒執行一次的循環，計算所有建築產生的資源總和。
   - 產出：`src/hooks/useGameLoop.ts`。
-- [ ] `[IN PROGRESS]` Task 1.2.2：實作建築購買與價格遞增公式
+- [x] `[DONE]` Task 1.2.2：實作建築購買與價格遞增公式
   - 目標：確保購買建築後價格按指數增長，並判斷餘額是否充足。
   - 產出：`src/components/Store/BuildingItem.tsx`。
 
@@ -46,7 +46,7 @@ MVP 驗收標準：
 
 ### Feature 2.1：里程碑與進度感
 
-- [ ] `[TODO]` Task 2.1.1：實作「里程碑」監聽器
+- [ ] `[IN PROGRESS]` Task 2.1.1：實作「里程碑」監聽器
   - 目標：當玩家達到特定成就（如：擁有 10 座採礦場）時觸發通知。
   - 產出：`src/data/milestones.ts` 與對應的檢測邏輯。
 - [ ] `[TODO]` Task 2.1.2：動態解鎖 UI 元件
