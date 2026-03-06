@@ -4,6 +4,7 @@ import { StorePanel } from './components/Store/StorePanel';
 import { MilestoneNotification } from './components/Milestone/MilestoneNotification';
 import { useClickEffect, ClickEffectLayer } from './components/Effects/ClickEffect';
 import { ResourceDisplay } from './components/Dashboard/ResourceDisplay';
+import { SaveControls } from './components/Header/SaveControls';
 
 export default function App() {
   useGameLoop();
@@ -22,9 +23,12 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-8 font-mono">
-      <h1 className="text-2xl font-bold text-cyan-400 mb-6">
-        宇宙殖民 (Space Colonization)
-      </h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold text-cyan-400">
+          宇宙殖民 (Space Colonization)
+        </h1>
+        <SaveControls />
+      </div>
 
       {isPowerOutage && (
         <div className="mb-4 px-4 py-2 bg-red-900 border border-red-500 text-red-300">
