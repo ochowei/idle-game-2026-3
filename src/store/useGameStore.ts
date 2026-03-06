@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { MILESTONES, type MilestoneConditionArgs } from '../data/milestones';
 
 // ─── 型別定義 ────────────────────────────────────────────
 
@@ -121,6 +122,8 @@ export interface GameState {
   energyPerSec: number;
   energyConsPerSec: number;
   isPowerOutage: boolean;
+  triggeredMilestones: string[];     // 已達成的里程碑 ID 清單
+  pendingMilestone: string | null;   // 待顯示的通知（顯示後清空）
 
   // Actions
   manualMine: () => void;
@@ -130,6 +133,8 @@ export interface GameState {
   tick: (delta: number) => void;       // delta 單位：秒
   recalcRates: () => void;
   getBuildingCost: (id: BuildingId) => number;
+  checkMilestones: () => void;
+  dismissMilestone: () => void;
 }
 
 // ─── 輔助：計算建築成本 ──────────────────────────────────
@@ -181,6 +186,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   energyPerSec: 0,
   energyConsPerSec: 0,
   isPowerOutage: false,
+  triggeredMilestones: [],
+  pendingMilestone: null,
 
   // ── 手動操作 ──────────────────────────────────────────
 
@@ -243,15 +250,13 @@ export const useGameStore = create<GameState>((set, get) => ({
     const newEnergy = resources.energy + netEnergy;
 
     if (newEnergy <= 0) {
-      // 能源不足 → 停電
       set((s) => ({
         resources: { ...s.resources, energy: 0 },
         isPowerOutage: true,
       }));
     } else {
-      // 能源正常 → 計算礦物生產
       const newMinerals = isPowerOutage
-        ? resources.minerals // 停電中不生產礦物
+        ? resources.minerals
         : resources.minerals + mineralsPerSec * delta;
 
       set({
@@ -262,6 +267,8 @@ export const useGameStore = create<GameState>((set, get) => ({
         isPowerOutage: false,
       });
     }
+
+    get().checkMilestones();
   },
 
   // ── 重新計算產量快取（供外部強制同步使用）────────────
@@ -276,5 +283,28 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   getBuildingCost: (id: BuildingId) => {
     return calcBuildingCost(id, get().buildings[id]);
+  },
+
+  checkMilestones: () => {
+    const { resources, buildings, mineralsPerSec, energyPerSec, energyConsPerSec, triggeredMilestones, pendingMilestone } = get();
+    // 若已有待顯示的通知，先不疊加新的
+    if (pendingMilestone !== null) return;
+
+    const args: MilestoneConditionArgs = { resources, buildings, mineralsPerSec, energyPerSec, energyConsPerSec };
+
+    for (const milestone of MILESTONES) {
+      if (triggeredMilestones.includes(milestone.id)) continue;
+      if (milestone.condition(args)) {
+        set({
+          triggeredMilestones: [...triggeredMilestones, milestone.id],
+          pendingMilestone: milestone.id,
+        });
+        return; // 一次只觸發一個，下個 tick 再觸發下一個
+      }
+    }
+  },
+
+  dismissMilestone: () => {
+    set({ pendingMilestone: null });
   },
 }));

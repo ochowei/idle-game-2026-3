@@ -2,6 +2,7 @@ import { useGameStore } from './store/useGameStore';
 import { formatNumber, formatRate } from './utils/formatters';
 import { useGameLoop } from './hooks/useGameLoop';
 import { StorePanel } from './components/Store/StorePanel';
+import { MilestoneNotification } from './components/Milestone/MilestoneNotification';
 
 export default function App() {
   useGameLoop();
@@ -58,6 +59,8 @@ export default function App() {
       </section>
 
       <StorePanel />
+
+      <MilestoneNotification />
     </div>
   );
 }
