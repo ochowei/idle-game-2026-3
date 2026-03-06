@@ -1,18 +1,46 @@
 import { useGameStore } from './store/useGameStore';
-import { formatNumber } from './utils/formatters';
+import { formatNumber, formatRate } from './utils/formatters';
+import { useGameLoop } from './hooks/useGameLoop';
 
 export default function App() {
-  const { resources, manualMine, manualEnergy } = useGameStore();
+  useGameLoop();
+
+  const {
+    resources,
+    mineralsPerSec,
+    energyPerSec,
+    isPowerOutage,
+    manualMine,
+    manualEnergy,
+  } = useGameStore();
 
   return (
     <div className="min-h-screen bg-gray-900 text-white p-8 font-mono">
       <h1 className="text-2xl font-bold text-cyan-400 mb-6">
         宇宙殖民 (Space Colonization)
       </h1>
-      <section className="mb-4">
-        <p>星際礦物: {formatNumber(resources.minerals)}</p>
-        <p>能源: {formatNumber(resources.energy)}</p>
+
+      {isPowerOutage && (
+        <div className="mb-4 px-4 py-2 bg-red-900 border border-red-500 text-red-300">
+          ⚠️ 停電中！礦物產出暫停。請手動發電或購買太陽能陣列。
+        </div>
+      )}
+
+      <section className="mb-6">
+        <p>
+          星際礦物: {formatNumber(resources.minerals)}
+          <span className="text-gray-400 text-sm ml-2">
+            ({formatRate(mineralsPerSec)})
+          </span>
+        </p>
+        <p>
+          能源: {formatNumber(resources.energy)}
+          <span className="text-gray-400 text-sm ml-2">
+            ({formatRate(energyPerSec)})
+          </span>
+        </p>
       </section>
+
       <section className="flex gap-4">
         <button
           onClick={manualMine}
