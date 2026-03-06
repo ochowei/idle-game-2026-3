@@ -1,4 +1,5 @@
 import { useGameStore } from './store/useGameStore';
+import { formatNumber } from './utils/formatters';
 
 export default function App() {
   const { resources, manualMine, manualEnergy } = useGameStore();
@@ -9,8 +10,8 @@ export default function App() {
         宇宙殖民 (Space Colonization)
       </h1>
       <section className="mb-4">
-        <p>星際礦物: {Math.floor(resources.minerals)}</p>
-        <p>能源: {Math.floor(resources.energy)}</p>
+        <p>星際礦物: {formatNumber(resources.minerals)}</p>
+        <p>能源: {formatNumber(resources.energy)}</p>
       </section>
       <section className="flex gap-4">
         <button
