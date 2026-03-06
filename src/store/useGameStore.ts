@@ -1,5 +1,7 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { MILESTONES, type MilestoneConditionArgs } from '../data/milestones';
+import { STORAGE_KEY } from '../utils/persistence';
 
 // ─── 型別定義 ────────────────────────────────────────────
 
@@ -180,7 +182,9 @@ function calcRates(buildings: Buildings, upgrades: Upgrades) {
 
 // ─── Zustand Store ───────────────────────────────────────
 
-export const useGameStore = create<GameState>((set, get) => ({
+export const useGameStore = create<GameState>()(
+  persist(
+    (set, get) => ({
   // 初始資料
   resources: { minerals: 0, energy: 0 },
   buildings: { drone: 0, solar: 0, asteroid: 0, reactor: 0 },
@@ -313,4 +317,18 @@ export const useGameStore = create<GameState>((set, get) => ({
   dismissMilestone: () => {
     set({ pendingMilestone: null });
   },
-}));
+    }),
+    {
+      name: STORAGE_KEY,
+      partialize: (state) => ({
+        resources: state.resources,
+        buildings: state.buildings,
+        upgrades: state.upgrades,
+        triggeredMilestones: state.triggeredMilestones,
+      }),
+      onRehydrateStorage: () => (state) => {
+        if (state) state.recalcRates();
+      },
+    }
+  )
+);
