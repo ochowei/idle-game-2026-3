@@ -1,9 +1,9 @@
 import { useGameStore } from './store/useGameStore';
-import { formatNumber, formatRate } from './utils/formatters';
 import { useGameLoop } from './hooks/useGameLoop';
 import { StorePanel } from './components/Store/StorePanel';
 import { MilestoneNotification } from './components/Milestone/MilestoneNotification';
 import { useClickEffect, ClickEffectLayer } from './components/Effects/ClickEffect';
+import { ResourceDisplay } from './components/Dashboard/ResourceDisplay';
 
 export default function App() {
   useGameLoop();
@@ -32,20 +32,12 @@ export default function App() {
         </div>
       )}
 
-      <section className="mb-6">
-        <p>
-          星際礦物: {formatNumber(resources.minerals)}
-          <span className="text-gray-400 text-sm ml-2">
-            ({formatRate(mineralsPerSec)})
-          </span>
-        </p>
-        <p>
-          能源: {formatNumber(resources.energy)}
-          <span className="text-gray-400 text-sm ml-2">
-            ({formatRate(energyPerSec)})
-          </span>
-        </p>
-      </section>
+      <ResourceDisplay
+        minerals={resources.minerals}
+        energy={resources.energy}
+        mineralsPerSec={mineralsPerSec}
+        energyPerSec={energyPerSec}
+      />
 
       <section className="flex gap-4">
         <button
