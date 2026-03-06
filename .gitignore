@@ -6,3 +6,10 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# virtual-team runtime files
+.virtual-team/PM_DONE
+.virtual-team/CODER_DONE
+.virtual-team/HUMAN_NEEDED.md
+.virtual-team/CURRENT_TASK.md
+.commit_msg
