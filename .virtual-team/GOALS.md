@@ -24,7 +24,7 @@ MVP 驗收標準：
 
 ### Feature 1.1：遊戲狀態管理
 
-- [ ] `[TODO]` Task 1.1.1：建立遊戲核心狀態機 (GameState)
+- [x] `[IN PROGRESS]` Task 1.1.1：建立遊戲核心狀態機 (GameState)
   - 目標：定義全域資源、建築等級、玩家進度等核心數據結構。
   - 產出：`src/store/useGameStore.ts`。
 - [ ] `[TODO]` Task 1.1.2：實作數值格式化工具
