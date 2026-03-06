@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>宇宙殖民 (Space Colonization)</title>
+    <style>
+        /* CSS 樣式設定 */
+        :root {
+            --bg-color: #0a0a12;
+            --panel-bg: #151522;
+            --border-color: #2a2a40;
+            --text-main: #e0e0e0;
+            --neon-green: #00ff66;
+            --neon-blue: #00ccff;
+            --neon-red: #ff3366;
+            --neon-yellow: #ffcc00;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        header {
+            text-align: center;
+            padding: 15px;
+            background-color: var(--panel-bg);
+            border-bottom: 2px solid var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
+            z-index: 10;
+        }
+
+        h1 {
+            color: var(--neon-blue);
+            text-shadow: 0 0 5px var(--neon-blue);
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .save-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        button {
+            background-color: transparent;
+            color: var(--neon-green);
+            border: 1px solid var(--neon-green);
+            padding: 8px 15px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            transition: all 0.2s;
+            border-radius: 4px;
+        }
+
+        button:hover:not(:disabled) {
+            background-color: var(--neon-green);
+            color: var(--bg-color);
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+
+        button:disabled {
+            color: #555;
+            border-color: #555;
+            cursor: not-allowed;
+        }
+
+        .btn-blue {
+            color: var(--neon-blue);
+            border-color: var(--neon-blue);
+        }
+        .btn-blue:hover:not(:disabled) {
+            background-color: var(--neon-blue);
+            color: var(--bg-color);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .btn-red {
+            color: var(--neon-red);
+            border-color: var(--neon-red);
+        }
+        .btn-red:hover:not(:disabled) {
+            background-color: var(--neon-red);
+            color: var(--bg-color);
+            box-shadow: 0 0 10px var(--neon-red);
+        }
+
+        .container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .panel {
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            margin: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        /* 左側：資源區 */
+        .resources-panel {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .resource-item {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .resource-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .resource-amount {
+            font-size: 28px;
+            text-shadow: 0 0 5px currentColor;
+        }
+
+        .resource-rate {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        .text-minerals { color: var(--neon-blue); }
+        .text-energy { color: var(--neon-yellow); }
+        .text-danger { color: var(--neon-red); }
+
+        /* 中間：操作與購買區 */
+        .main-panel {
+            flex: 2;
+            min-width: 400px;
+        }
+
+        .section-title {
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .section-title:first-child {
+            margin-top: 0;
+        }
+
+        .manual-actions {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .manual-btn {
+            flex: 1;
+            padding: 20px;
+            font-size: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .store-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .store-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .store-info {
+            flex: 1;
+        }
+
+        .store-name {
+            font-weight: bold;
+            font-size: 16px;
+            color: var(--neon-green);
+        }
+
+        .store-desc {
+            font-size: 12px;
+            color: #aaa;
+            margin-top: 4px;
+        }
+
+        .store-stats {
+            font-size: 12px;
+            margin-top: 4px;
+            color: #888;
+        }
+
+        .store-action {
+            text-align: right;
+            min-width: 120px;
+        }
+
+        .cost-display {
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        /* 右側：日誌區 */
+        .log-panel {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .log-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .log-item {
+            font-size: 13px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--border-color);
+            color: #aaa;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .log-time {
+            color: #666;
+            margin-right: 5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 900px) {
+            .container {
+                flex-direction: column;
+                overflow-y: auto;
+            }
+            .panel {
+                flex: none;
+                overflow-y: visible;
+            }
+            body {
+                overflow: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>宇宙殖民 (Space Colonization)</h1>
+        <div class="save-controls">
+            <button class="btn-blue" onclick="game.saveGame()">手動存檔</button>
+            <button class="btn-red" onclick="game.resetGame()">刪除存檔</button>
+            <span id="auto-save-indicator" style="color: #666; font-size: 12px; line-height: 34px; margin-left: 10px;"></span>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- 左側：資源顯示區 -->
+        <div class="panel resources-panel">
+            <div class="section-title">資源監控</div>
+            
+            <div class="resource-item">
+                <div class="resource-name text-minerals">星際礦物 (Minerals)</div>
+                <div class="resource-amount text-minerals" id="res-minerals">0</div>
+                <div class="resource-rate" id="rate-minerals">產量: 0 / 秒</div>
+            </div>
+
+            <div class="resource-item">
+                <div class="resource-name text-energy">能源 (Energy)</div>
+                <div class="resource-amount text-energy" id="res-energy">0</div>
+                <div class="resource-rate" id="rate-energy">產量: 0 / 秒</div>
+                <div id="energy-warning" class="resource-rate text-danger" style="display: none;">⚠️ 能源枯竭！採礦設備已停機</div>
+            </div>
+        </div>
+
+        <!-- 中間：操作與購買區 -->
+        <div class="panel main-panel">
+            <div class="section-title">手動操作</div>
+            <div class="manual-actions">
+                <button class="manual-btn btn-blue" onclick="game.manualMine()">
+                    <span>⛏️ 開採隕石</span>
+                    <span id="manual-mine-rate" style="font-size: 12px; color: #aaa;">+1 礦物 / 點擊</span>
+                </button>
+                <button class="manual-btn btn-yellow" style="color: var(--neon-yellow); border-color: var(--neon-yellow);" onclick="game.manualEnergy()">
+                    <span>⚡ 手搖發電機</span>
+                    <span style="font-size: 12px; color: #aaa;">+1 能源 / 點擊</span>
+                </button>
+            </div>
+
+            <div class="section-title">自動化建築</div>
+            <div class="store-list" id="buildings-list">
+                <!-- 建築列表由 JS 動態生成 -->
+            </div>
+
+            <div class="section-title">科技升級</div>
+            <div class="store-list" id="upgrades-list">
+                <!-- 升級列表由 JS 動態生成 -->
+            </div>
+        </div>
+
+        <!-- 右側：日誌區 -->
+        <div class="panel log-panel">
+            <div class="section-title">系統日誌 (System Log)</div>
+            <ul class="log-list" id="system-log">
+                <!-- 日誌由 JS 動態生成 -->
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * 遊戲核心邏輯 (MVC 架構簡化版)
+         */
+        const game = {
+            // 遊戲資料模型 (Model)
+            data: {
+                resources: {
+                    minerals: 0,
+                    energy: 0
+                },
+                buildings: {
+                    drone: 0,       // 採礦無人機
+                    solar: 0,       // 太陽能陣列
+                    asteroid: 0,    // 小行星礦場
+                    reactor: 0      // 核融合反應爐
+                },
+                upgrades: {
+                    drill: false,   // 碳纖維鑽頭
+                    coating: false, // 高導電塗層
+                    ai: false       // AI 協同網絡
+                },
+                lastSaveTime: Date.now()
+            },
+
+            // 遊戲設定常數
+            config: {
+                fps: 10, // 每秒更新次數 (Ticks per second)
+                autoSaveInterval: 10000, // 自動存檔間隔 (毫秒)
+                
+                // 建築設定
+                buildings: {
+                    drone: {
+                        id: 'drone',
+                        name: '採礦無人機',
+                        desc: '基礎採礦設備。',
+                        baseCost: 10,
+                        costMult: 1.15,
+                        prodMinerals: 1,
+                        consEnergy: 0.5
+                    },
+                    solar: {
+                        id: 'solar',
+                        name: '太陽能陣列',
+                        desc: '收集恆星光芒轉換為能源。',
+                        baseCost: 15,
+                        costMult: 1.15,
+                        prodMinerals: 0,
+                        prodEnergy: 2,
+                        consEnergy: 0
+                    },
+                    asteroid: {
+                        id: 'asteroid',
+                        name: '小行星礦場',
+                        desc: '大型採礦設施，耗能巨大。',
+                        baseCost: 200,
+                        costMult: 1.15,
+                        prodMinerals: 15,
+                        consEnergy: 10
+                    },
+                    reactor: {
+                        id: 'reactor',
+                        name: '核融合反應爐',
+                        desc: '提供龐大且穩定的能源。',
+                        baseCost: 500,
+                        costMult: 1.15,
+                        prodMinerals: 0,
+                        prodEnergy: 50,
+                        consEnergy: 0
+                    }
+                },
+
+                // 升級設定
+                upgrades: {
+                    drill: {
+                        id: 'drill',
+                        name: '碳纖維鑽頭',
+                        desc: '手動開採隕石的收益 +1。',
+                        cost: 100
+                    },
+                    coating: {
+                        id: 'coating',
+                        name: '高導電塗層',
+                        desc: '太陽能陣列的產能提升 50%。',
+                        cost: 250
+                    },
+                    ai: {
+                        id: 'ai',
+                        name: 'AI 協同網絡',
+                        desc: '所有採礦無人機的礦物產量 x2。',
+                        cost: 1000
+                    }
+                }
+            },
+
+            // 暫存計算結果 (每秒產量等)
+            cache: {
+                mineralsPerSec: 0,
+                energyPerSec: 0,
+                energyConsPerSec: 0,
+                isPowerOutage: false // 是否停電
+            },
+
+            // 系統日誌
+            logs: [],
+
+            // 初始化遊戲
+            init() {
+                this.loadGame();
+                this.log("系統初始化完成，歡迎來到宇宙殖民計畫。");
+                this.renderStaticUI();
+                this.updateCache();
+                
+                // 啟動 Game Loop
+                setInterval(() => this.tick(), 1000 / this.config.fps);
+                // 啟動自動存檔
+                setInterval(() => this.autoSave(), this.config.autoSaveInterval);
+                
+                // 初始畫面更新
+                this.updateUI();
+            },
+
+            // 遊戲核心循環 (Game Loop)
+            tick() {
+                const tickRate = 1 / this.config.fps;
+                
+                // 1. 先計算能源消耗與生產
+                let netEnergy = (this.cache.energyPerSec - this.cache.energyConsPerSec) * tickRate;
+                
+                // 檢查是否會導致能源小於 0
+                if (this.data.resources.energy + netEnergy <= 0) {
+                    this.data.resources.energy = 0;
+                    if (!this.cache.isPowerOutage) {
+                        this.cache.isPowerOutage = true;
+                        this.log("⚠️ 警告：能源枯竭！所有採礦設備已停機。");
+                    }
+                } else {
+                    this.data.resources.energy += netEnergy;
+                    if (this.cache.isPowerOutage) {
+                        this.cache.isPowerOutage = false;
+                        this.log("✅ 能源恢復，採礦設備重新啟動。");
+                    }
+                }
+
+                // 2. 計算礦物生產 (如果停電，則不生產礦物)
+                if (!this.cache.isPowerOutage) {
+                    this.data.resources.minerals += this.cache.mineralsPerSec * tickRate;
+                }
+
+                // 更新 UI
+                this.updateUI();
+            },
+
+            // 更新暫存的產量計算
+            updateCache() {
+                let mps = 0; // Minerals per sec
+                let eps = 0; // Energy prod per sec
+                let ecs = 0; // Energy cons per sec
+
+                // 計算採礦無人機
+                let droneCount = this.data.buildings.drone;
+                let droneProd = this.config.buildings.drone.prodMinerals;
+                if (this.data.upgrades.ai) droneProd *= 2; // AI 升級效果
+                mps += droneCount * droneProd;
+                ecs += droneCount * this.config.buildings.drone.consEnergy;
+
+                // 計算太陽能陣列
+                let solarCount = this.data.buildings.solar;
+                let solarProd = this.config.buildings.solar.prodEnergy;
+                if (this.data.upgrades.coating) solarProd *= 1.5; // 塗層升級效果
+                eps += solarCount * solarProd;
+
+                // 計算小行星礦場
+                let asteroidCount = this.data.buildings.asteroid;
+                mps += asteroidCount * this.config.buildings.asteroid.prodMinerals;
+                ecs += asteroidCount * this.config.buildings.asteroid.consEnergy;
+
+                // 計算核融合反應爐
+                let reactorCount = this.data.buildings.reactor;
+                eps += reactorCount * this.config.buildings.reactor.prodEnergy;
+
+                this.cache.mineralsPerSec = mps;
+                this.cache.energyPerSec = eps;
+                this.cache.energyConsPerSec = ecs;
+                
+                // 更新手動點擊 UI 提示
+                const manualMineAmount = 1 + (this.data.upgrades.drill ? 1 : 0);
+                document.getElementById('manual-mine-rate').innerText = `+${manualMineAmount} 礦物 / 點擊`;
+            },
+
+            // 手動開採礦物
+            manualMine() {
+                const amount = 1 + (this.data.upgrades.drill ? 1 : 0);
+                this.data.resources.minerals += amount;
+                this.updateUI();
+            },
+
+            // 手動發電
+            manualEnergy() {
+                this.data.resources.energy += 1;
+                // 如果原本是停電狀態，手動發電可能可以短暫恢復
+                if (this.cache.isPowerOutage && this.data.resources.energy > 0) {
+                    this.cache.isPowerOutage = false;
+                    this.log("✅ 偵測到手動能源注入，設備嘗試重啟。");
+                }
+                this.updateUI();
+            },
+
+            // 計算建築購買成本
+            getBuildingCost(id) {
+                const b = this.config.buildings[id];
+                const count = this.data.buildings[id];
+                return Math.floor(b.baseCost * Math.pow(b.costMult, count));
+            },
+
+            // 購買建築
+            buyBuilding(id) {
+                const cost = this.getBuildingCost(id);
+                if (this.data.resources.minerals >= cost) {
+                    this.data.resources.minerals -= cost;
+                    this.data.buildings[id]++;
+                    this.log(`購買了 ${this.config.buildings[id].name}`);
+                    this.updateCache();
+                    this.renderStaticUI(); // 重新渲染列表以更新成本
+                    this.updateUI();
+                }
+            },
+
+            // 購買升級
+            buyUpgrade(id) {
+                const u = this.config.upgrades[id];
+                if (!this.data.upgrades[id] && this.data.resources.minerals >= u.cost) {
+                    this.data.resources.minerals -= u.cost;
+                    this.data.upgrades[id] = true;
+                    this.log(`研發完成：${u.name}`);
+                    this.updateCache();
+                    this.renderStaticUI(); // 重新渲染以隱藏已購買的升級
+                    this.updateUI();
+                }
+            },
+
+            // 系統日誌
+            log(msg) {
+                const now = new Date();
+                const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}`;
+                this.logs.unshift({ time: timeStr, msg: msg });
+                if (this.logs.length > 50) this.logs.pop(); // 保留最新 50 筆
+                this.renderLogs();
+            },
+
+            // 存檔系統
+            saveGame() {
+                this.data.lastSaveTime = Date.now();
+                localStorage.setItem('spaceColonySave', JSON.stringify(this.data));
+                this.log("💾 遊戲已儲存。");
+                
+                const indicator = document.getElementById('auto-save-indicator');
+                indicator.innerText = "已儲存";
+                setTimeout(() => indicator.innerText = "", 2000);
+            },
+
+            loadGame() {
+                const save = localStorage.getItem('spaceColonySave');
+                if (save) {
+                    try {
+                        const parsed = JSON.parse(save);
+                        // 簡單的資料合併，確保新版本增加的欄位不會報錯
+                        this.data = { ...this.data, ...parsed };
+                        this.data.resources = { ...this.data.resources, ...parsed.resources };
+                        this.data.buildings = { ...this.data.buildings, ...parsed.buildings };
+                        this.data.upgrades = { ...this.data.upgrades, ...parsed.upgrades };
+                        this.log("載入存檔成功。");
+                    } catch (e) {
+                        console.error("存檔解析失敗", e);
+                        this.log("❌ 存檔損毀，開啟新遊戲。");
+                    }
+                }
+            },
+
+            resetGame() {
+                if (confirm("確定要刪除所有進度並重新開始嗎？此操作無法復原！")) {
+                    localStorage.removeItem('spaceColonySave');
+                    location.reload();
+                }
+            },
+
+            autoSave() {
+                this.saveGame();
+            },
+
+            // 格式化數字 (顯示小數點後一位)
+            formatNum(num) {
+                return Math.floor(num * 10) / 10;
+            },
+
+            // UI 渲染 (不常變動的部分)
+            renderStaticUI() {
+                // 渲染建築列表
+                const bList = document.getElementById('buildings-list');
+                bList.innerHTML = '';
+                for (const key in this.config.buildings) {
+                    const b = this.config.buildings[key];
+                    const count = this.data.buildings[key];
+                    const cost = this.getBuildingCost(key);
+                    
+                    let statsHtml = '';
+                    if (b.prodMinerals) statsHtml += `<span class="text-minerals">產出: +${b.prodMinerals}/s</span> `;
+                    if (b.prodEnergy) statsHtml += `<span class="text-energy">產出: +${b.prodEnergy}/s</span> `;
+                    if (b.consEnergy) statsHtml += `<span class="text-danger">消耗: -${b.consEnergy}/s</span>`;
+
+                    // 計算總產能顯示
+                    let totalStatsHtml = '';
+                    if (count > 0) {
+                        let totalProdMin = b.prodMinerals * count;
+                        if (key === 'drone' && this.data.upgrades.ai) totalProdMin *= 2;
+                        
+                        let totalProdEng = (b.prodEnergy || 0) * count;
+                        if (key === 'solar' && this.data.upgrades.coating) totalProdEng *= 1.5;
+
+                        let totalConsEng = (b.consEnergy || 0) * count;
+
+                        totalStatsHtml = `<div style="font-size: 11px; color: #666; margin-top: 2px;">總計: `;
+                        if (totalProdMin) totalStatsHtml += `+${totalProdMin} 礦物/s `;
+                        if (totalProdEng) totalStatsHtml += `+${totalProdEng} 能源/s `;
+                        if (totalConsEng) totalStatsHtml += `-${totalConsEng} 能源/s`;
+                        totalStatsHtml += `</div>`;
+                    }
+
+                    bList.innerHTML += `
+                        <div class="store-item">
+                            <div class="store-info">
+                                <div class="store-name">${b.name} <span style="color:#fff; font-size:14px;">(擁有: ${count})</span></div>
+                                <div class="store-desc">${b.desc}</div>
+                                <div class="store-stats">${statsHtml}</div>
+                                ${totalStatsHtml}
+                            </div>
+                            <div class="store-action">
+                                <div class="cost-display text-minerals">成本: ${cost}</div>
+                                <button id="btn-buy-${key}" onclick="game.buyBuilding('${key}')">購買</button>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // 渲染升級列表
+                const uList = document.getElementById('upgrades-list');
+                uList.innerHTML = '';
+                let hasUpgrades = false;
+                for (const key in this.config.upgrades) {
+                    if (this.data.upgrades[key]) continue; // 已購買則隱藏
+                    hasUpgrades = true;
+                    const u = this.config.upgrades[key];
+                    uList.innerHTML += `
+                        <div class="store-item">
+                            <div class="store-info">
+                                <div class="store-name" style="color: var(--neon-blue);">${u.name}</div>
+                                <div class="store-desc">${u.desc}</div>
+                            </div>
+                            <div class="store-action">
+                                <div class="cost-display text-minerals">成本: ${u.cost}</div>
+                                <button id="btn-upg-${key}" class="btn-blue" onclick="game.buyUpgrade('${key}')">研發</button>
+                            </div>
+                        </div>
+                    `;
+                }
+                if (!hasUpgrades) {
+                    uList.innerHTML = `<div style="text-align: center; color: #666; padding: 10px;">所有科技已研發完畢</div>`;
+                }
+            },
+
+            // UI 渲染 (高頻變動的部分)
+            updateUI() {
+                // 更新資源數值
+                document.getElementById('res-minerals').innerText = this.formatNum(this.data.resources.minerals);
+                document.getElementById('res-energy').innerText = this.formatNum(this.data.resources.energy);
+
+                // 更新產量顯示
+                const actualMinRate = this.cache.isPowerOutage ? 0 : this.cache.mineralsPerSec;
+                document.getElementById('rate-minerals').innerText = `產量: ${this.formatNum(actualMinRate)} / 秒`;
+                
+                const netEnergyRate = this.cache.energyPerSec - this.cache.energyConsPerSec;
+                const sign = netEnergyRate >= 0 ? '+' : '';
+                document.getElementById('rate-energy').innerText = `淨產量: ${sign}${this.formatNum(netEnergyRate)} / 秒`;
+
+                // 停電警告
+                document.getElementById('energy-warning').style.display = this.cache.isPowerOutage ? 'block' : 'none';
+
+                // 更新按鈕可用狀態 (建築)
+                for (const key in this.config.buildings) {
+                    const btn = document.getElementById(`btn-buy-${key}`);
+                    if (btn) {
+                        const cost = this.getBuildingCost(key);
+                        btn.disabled = this.data.resources.minerals < cost;
+                    }
+                }
+
+                // 更新按鈕可用狀態 (升級)
+                for (const key in this.config.upgrades) {
+                    const btn = document.getElementById(`btn-upg-${key}`);
+                    if (btn && !this.data.upgrades[key]) {
+                        btn.disabled = this.data.resources.minerals < this.config.upgrades[key].cost;
+                    }
+                }
+            },
+
+            // 渲染日誌
+            renderLogs() {
+                const logEl = document.getElementById('system-log');
+                logEl.innerHTML = this.logs.map(l => `
+                    <li class="log-item">
+                        <span class="log-time">[${l.time}]</span> ${l.msg}
+                    </li>
+                `).join('');
+            }
+        };
+
+        // 頁面載入完成後啟動遊戲
+        window.onload = () => {
+            game.init();
+        };
+    </script>
+</body>
+</html>
