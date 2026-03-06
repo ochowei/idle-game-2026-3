@@ -27,13 +27,13 @@ MVP 驗收標準：
 - [x] `[DONE]` Task 1.1.1：建立遊戲核心狀態機 (GameState)
   - 目標：定義全域資源、建築等級、玩家進度等核心數據結構。
   - 產出：`src/store/useGameStore.ts`。
-- [ ] `[IN PROGRESS]` Task 1.1.2：實作數值格式化工具
+- [x] `[DONE]` Task 1.1.2：實作數值格式化工具
   - 目標：將大數字轉換為科學計數法或簡寫（如 1.2k, 1.5M）。
   - 產出：`src/utils/formatters.ts`。
 
 ### Feature 1.2：經濟循環系統
 
-- [ ] `[TODO]` Task 1.2.1：實作自動資源產出邏輯 (Tick System)
+- [ ] `[IN PROGRESS]` Task 1.2.1：實作自動資源產出邏輯 (Tick System)
   - 目標：建立每秒執行一次的循環，計算所有建築產生的資源總和。
   - 產出：`src/hooks/useGameLoop.ts`。
 - [ ] `[TODO]` Task 1.2.2：實作建築購買與價格遞增公式
