@@ -46,10 +46,10 @@ MVP 驗收標準：
 
 ### Feature 2.1：里程碑與進度感
 
-- [ ] `[IN PROGRESS]` Task 2.1.1：實作「里程碑」監聽器
+- [x] `[DONE]` Task 2.1.1：實作「里程碑」監聽器
   - 目標：當玩家達到特定成就（如：擁有 10 座採礦場）時觸發通知。
   - 產出：`src/data/milestones.ts` 與對應的檢測邏輯。
-- [ ] `[TODO]` Task 2.1.2：動態解鎖 UI 元件
+- [ ] `[IN PROGRESS]` Task 2.1.2：動態解鎖 UI 元件
   - 目標：初始隱藏高級建築，直到達成特定條件才在商店顯示。
   - 產出：`src/components/Store/StorePanel.tsx` 的過濾邏輯。
 
