@@ -58,7 +58,7 @@ MVP 驗收標準：
 - [x] `[DONE]` Task 2.2.1：實作點擊位置浮動文字 (Floating Text)
   - 目標：使用者點擊收集按鈕時，在滑鼠位置顯示「+1」的動畫回饋。
   - 產出：`src/components/Effects/ClickEffect.tsx`。
-- [ ] `[IN PROGRESS]` Task 2.2.2：實作資源條成長動畫
+- [x] `[DONE]` Task 2.2.2：實作資源條成長動畫
   - 目標：當資源增加時，數值以滾動動畫呈現而非瞬間跳變。
   - 產出：`src/components/Dashboard/ResourceDisplay.tsx`。
 
@@ -68,7 +68,7 @@ MVP 驗收標準：
 
 ### Feature 3.1：LocalStorage 整合
 
-- [ ] `[TODO]` Task 3.1.1：實作存檔與自動讀取機制
+- [ ] `[IN PROGRESS]` Task 3.1.1：實作存檔與自動讀取機制
   - 目標：利用 Zustand Middleware 或原生 LocalStorage 儲存 JSON 狀態。
   - 產出：`src/utils/persistence.ts`。
 - [ ] `[TODO]` Task 3.1.2：實作「重設進度」功能
